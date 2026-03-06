@@ -6,27 +6,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { z } from "zod";
+
+const emailSchema = z.string().trim().email("Please enter a valid email address");
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { resetPassword } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast({ title: "Please enter your email", variant: "destructive" });
+    setError("");
+    const result = emailSchema.safeParse(email);
+    if (!result.success) {
+      setError(result.error.issues[0].message);
       return;
     }
     setLoading(true);
-    // TODO: Integrate Supabase password reset
-    setTimeout(() => {
-      setLoading(false);
+    const { error: resetError } = await resetPassword(email);
+    setLoading(false);
+    if (resetError) {
+      toast({ title: resetError.message, variant: "destructive" });
+    } else {
       setSent(true);
       toast({ title: "Reset link sent to your email!" });
-    }, 1000);
+    }
   };
 
   return (
@@ -41,12 +51,7 @@ export default function ForgotPassword() {
 
       <Card className="w-full max-w-sm">
         <CardHeader className="pb-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-fit gap-1 -ml-2"
-            onClick={() => navigate("/login")}
-          >
+          <Button variant="ghost" size="sm" className="w-fit gap-1 -ml-2" onClick={() => navigate("/login")}>
             <ArrowLeft className="h-4 w-4" />
             Back to Login
           </Button>
@@ -72,7 +77,9 @@ export default function ForgotPassword() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
+                  className={error ? "border-destructive" : ""}
                 />
+                {error && <p className="text-xs text-destructive">{error}</p>}
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Sending..." : "Send Reset Link"}
