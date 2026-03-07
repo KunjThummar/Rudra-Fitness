@@ -12,7 +12,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   const { user, role, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) {
+  if (loading || (user && allowedRoles && !role)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <LoadingSpinner size="lg" text="Loading..." />
