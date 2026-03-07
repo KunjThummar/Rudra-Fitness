@@ -14,7 +14,7 @@ export function AppLayout({ role, title }: AppLayoutProps) {
   const { user, role: userRole, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) {
+  if (loading || (user && !userRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <LoadingSpinner size="lg" text="Loading..." />
@@ -26,7 +26,7 @@ export function AppLayout({ role, title }: AppLayoutProps) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (userRole && userRole !== role) {
+  if (userRole !== role) {
     return <Navigate to="/unauthorized" replace />;
   }
 
