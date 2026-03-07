@@ -207,6 +207,98 @@ export type Database = {
         }
         Relationships: []
       }
+      diet_plans: {
+        Row: {
+          calories: number | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          calories?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          calories?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      workouts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          level: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          level?: string | null
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          level?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      trainer_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          experience_years: number | null
+          id: string
+          is_active: boolean | null
+          specializations: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          experience_years?: number | null
+          id: string
+          is_active?: boolean | null
+          specializations?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          experience_years?: number | null
+          id?: string
+          is_active?: boolean | null
+          specializations?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainer_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

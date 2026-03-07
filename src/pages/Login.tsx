@@ -143,6 +143,18 @@ export default function Login() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Signing in..." : `Sign In as ${tab === "admin" ? "Admin" : "Member"}`}
             </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Don't have an account?{" "}
+              <Button
+                type="button"
+                variant="link"
+                className="px-0 text-sm h-auto py-0 font-semibold"
+                onClick={() => navigate("/signup")}
+              >
+                Sign Up
+              </Button>
+            </p>
           </form>
         </CardContent>
       </Card>
