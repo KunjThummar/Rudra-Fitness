@@ -20,7 +20,7 @@ export function StatCard({ title, value, change, changeType = "neutral", icon: I
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
-            <p className="text-2xl font-bold text-foreground">{value}</p>
+            <p className="text-2xl font-bold bg-gradient-to-r from-primary to-[#EA580C] bg-clip-text text-transparent">{value}</p>
             {change && (
               <div className="flex items-center gap-1">
                 <TrendIcon

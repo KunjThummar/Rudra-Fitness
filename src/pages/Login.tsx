@@ -65,8 +65,8 @@ export default function Login() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
       <div className="flex flex-col items-center mb-8">
-        <div className="h-16 w-16 rounded-2xl bg-primary flex items-center justify-center mb-4 shadow-lg">
-          <Dumbbell className="h-8 w-8 text-primary-foreground" />
+        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-[#EA580C] flex items-center justify-center mb-4 shadow-xl shadow-primary/20">
+          <Dumbbell className="h-8 w-8 text-white" />
         </div>
         <h1 className="text-2xl font-bold text-foreground">Rudra Fitness</h1>
         <p className="text-sm text-muted-foreground mt-1">Manage your gym, digitally</p>

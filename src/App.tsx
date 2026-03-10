@@ -20,7 +20,18 @@ import WorkoutsPage from "@/pages/admin/Workouts";
 import DietPlansPage from "@/pages/admin/DietPlans";
 import TrainersPage from "@/pages/admin/Trainers";
 import ReportsPage from "@/pages/admin/Reports";
+import AttendancePage from "@/pages/admin/Attendance";
+import NotificationsAdminPage from "@/pages/admin/Notifications";
+import AdminMorePage from "@/pages/admin/More";
 import MemberDashboard from "@/pages/member/Dashboard";
+import MemberWorkoutsPage from "@/pages/member/Workouts";
+import MemberDietPage from "@/pages/member/Diet";
+import MemberProgressPage from "@/pages/member/Progress";
+import MemberAttendancePage from "@/pages/member/Attendance";
+import MemberNotificationsPage from "@/pages/member/Notifications";
+import MemberAchievementsPage from "@/pages/member/Achievements";
+import MemberProfilePage from "@/pages/member/Profile";
+import MemberMorePage from "@/pages/member/More";
 import SettingsPage from "@/pages/Settings";
 import HelpPage from "@/pages/Help";
 import PlaceholderPage from "@/pages/PlaceholderPage";
@@ -56,12 +67,12 @@ const App = () => (
               <Route path="/admin/payments" element={<PaymentsPage />} />
               <Route path="/admin/plans" element={<MembershipPlansPage />} />
               <Route path="/admin/reports" element={<ReportsPage />} />
-              <Route path="/admin/more" element={<PlaceholderPage title="More" />} />
+              <Route path="/admin/more" element={<AdminMorePage />} />
               <Route path="/admin/workouts" element={<WorkoutsPage />} />
               <Route path="/admin/diet-plans" element={<DietPlansPage />} />
               <Route path="/admin/trainers" element={<TrainersPage />} />
-              <Route path="/admin/announcements" element={<PlaceholderPage title="Announcements" />} />
-              <Route path="/admin/attendance" element={<PlaceholderPage title="Attendance" />} />
+              <Route path="/admin/announcements" element={<NotificationsAdminPage />} />
+              <Route path="/admin/attendance" element={<AttendancePage />} />
               <Route path="/admin/settings" element={<SettingsPage />} />
               <Route path="/admin/help" element={<HelpPage />} />
             </Route>
@@ -69,14 +80,15 @@ const App = () => (
             {/* Member Routes */}
             <Route element={<AppLayout role="member" title="Rudra Fitness" />}>
               <Route path="/member" element={<MemberDashboard />} />
-              <Route path="/member/workouts" element={<PlaceholderPage title="Workouts" />} />
-              <Route path="/member/diet" element={<PlaceholderPage title="Diet" />} />
-              <Route path="/member/progress" element={<PlaceholderPage title="Progress" />} />
-              <Route path="/member/more" element={<PlaceholderPage title="More" />} />
+              <Route path="/member/workouts" element={<MemberWorkoutsPage />} />
+              <Route path="/member/diet" element={<MemberDietPage />} />
+              <Route path="/member/progress" element={<MemberProgressPage />} />
+              <Route path="/member/more" element={<MemberMorePage />} />
               <Route path="/member/membership" element={<PlaceholderPage title="Membership" />} />
-              <Route path="/member/attendance" element={<PlaceholderPage title="Attendance" />} />
-              <Route path="/member/notifications" element={<PlaceholderPage title="Notifications" />} />
-              <Route path="/member/profile" element={<PlaceholderPage title="Profile" />} />
+              <Route path="/member/attendance" element={<MemberAttendancePage />} />
+              <Route path="/member/notifications" element={<MemberNotificationsPage />} />
+              <Route path="/member/achievements" element={<MemberAchievementsPage />} />
+              <Route path="/member/profile" element={<MemberProfilePage />} />
               <Route path="/member/settings" element={<SettingsPage />} />
               <Route path="/member/help" element={<HelpPage />} />
             </Route>

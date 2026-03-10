@@ -4,36 +4,40 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Rudra Fitness Design System
-   Primary: #1E40AF → hsl(221, 72%, 40%)
-   Secondary/Orange: #F97316 → hsl(25, 95%, 53%)
-   Background: #F3F4F6 → hsl(220, 14%, 96%)
+/* Rudra Fitness Design System - Dark Grey & Orange Theme
+   Primary: #F97316 → hsl(25, 95%, 53%)
+   Secondary Orange: #EA580C → hsl(25, 90%, 48%)
+   Background: #1F1F1F → hsl(0, 0%, 12%)
+   Card/Secondary: #2A2A2A → hsl(0, 0%, 16%)
+   Text: #FFFFFF → hsl(0, 0%, 100%)
+   Secondary Text: #D1D5DB → hsl(215, 16%, 84%)
+   Borders: #3A3A3A → hsl(0, 0%, 23%)
    Success: #10B981 → hsl(160, 84%, 39%)
    Warning: #F59E0B → hsl(38, 92%, 50%)
 */
 
 @layer base {
-  :root {
-    --background: 220 14% 96%;
-    --foreground: 221 39% 11%;
+  :root, .dark {
+    --background: 0 0% 12%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 221 39% 11%;
+    --card: 0 0% 16%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 221 39% 11%;
+    --popover: 0 0% 16%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 221 72% 40%;
+    --primary: 25 95% 53%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 25 95% 53%;
+    --secondary: 0 0% 16%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 14% 92%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 0 0% 23%;
+    --muted-foreground: 215 16% 84%;
 
-    --accent: 221 72% 95%;
-    --accent-foreground: 221 72% 40%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 25 95% 53%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -44,65 +48,20 @@
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 221 72% 40%;
+    --border: 0 0% 23%;
+    --input: 0 0% 23%;
+    --ring: 25 95% 53%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 221 39% 11%;
-    --sidebar-primary: 221 72% 40%;
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 25 95% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 221 72% 95%;
-    --sidebar-accent-foreground: 221 72% 40%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 221 72% 40%;
-  }
-
-  .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 47% 10%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 10%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 221 72% 50%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 25 95% 53%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 221 72% 15%;
-    --accent-foreground: 221 72% 80%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 160 84% 39%;
-    --success-foreground: 0 0% 100%;
-
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 221 72% 50%;
-
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 221 72% 50%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 221 72% 15%;
-    --sidebar-accent-foreground: 221 72% 80%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 221 72% 50%;
+    --sidebar-accent: 0 0% 20%;
+    --sidebar-accent-foreground: 25 95% 53%;
+    --sidebar-border: 0 0% 23%;
+    --sidebar-ring: 25 95% 53%;
   }
 }
 
