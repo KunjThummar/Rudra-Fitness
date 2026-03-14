@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Edit, Phone, Calendar, CreditCard, UserX, Dumbbell } from "lucide-react";
+import { ArrowLeft, Edit, Phone, Calendar, CreditCard, UserX, Dumbbell, Salad, Plus } from "lucide-react";
 import { format } from "date-fns";
 
 export default function MemberProfile() {
@@ -16,6 +17,8 @@ export default function MemberProfile() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [selectedWorkoutPlan, setSelectedWorkoutPlan] = useState("");
+  const [selectedDietPlan, setSelectedDietPlan] = useState("");
 
   const { data: member, isLoading } = useQuery({
     queryKey: ["admin-member", id],
@@ -68,6 +71,74 @@ export default function MemberProfile() {
       return data ?? [];
     },
     enabled: !!id,
+  });
+
+  const { data: memberWorkouts } = useQuery({
+    queryKey: ["admin-member-workouts", id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("member_workouts")
+        .select("*, workout_plans(name, difficulty)")
+        .eq("member_id", id!)
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+    enabled: !!id,
+  });
+
+  const { data: memberDietPlans } = useQuery({
+    queryKey: ["admin-member-diet-plans", id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("member_diet_plans")
+        .select("*, diet_plans(name, goal)")
+        .eq("member_id", id!)
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+    enabled: !!id,
+  });
+
+  const { data: allWorkoutPlans } = useQuery({
+    queryKey: ["all-workout-plans"],
+    queryFn: async () => {
+      const { data } = await supabase.from("workout_plans").select("id, name").eq("is_active", true);
+      return data ?? [];
+    }
+  });
+
+  const { data: allDietPlans } = useQuery({
+    queryKey: ["all-diet-plans"],
+    queryFn: async () => {
+      const { data } = await supabase.from("diet_plans").select("id, name").eq("is_active", true);
+      return data ?? [];
+    }
+  });
+
+  const assignWorkoutMutation = useMutation({
+    mutationFn: async (planId: string) => {
+      const { error } = await supabase.from("member_workouts").insert([{ member_id: id, workout_plan_id: planId }]);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "Workout plan assigned" });
+      setSelectedWorkoutPlan("");
+      queryClient.invalidateQueries({ queryKey: ["admin-member-workouts", id] });
+    },
+    onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
+  });
+
+  const assignDietMutation = useMutation({
+    mutationFn: async (planId: string) => {
+      const { error } = await supabase.from("member_diet_plans").insert([{ member_id: id, diet_plan_id: planId }]);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "Diet plan assigned" });
+      setSelectedDietPlan("");
+      queryClient.invalidateQueries({ queryKey: ["admin-member-diet-plans", id] });
+    },
+    onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
   });
 
   const suspendMutation = useMutation({
@@ -174,10 +245,12 @@ export default function MemberProfile() {
       {/* Tabs */}
       <div className="px-4">
         <Tabs defaultValue="membership" className="space-y-3">
-          <TabsList className="w-full">
-            <TabsTrigger value="membership" className="flex-1">Membership</TabsTrigger>
-            <TabsTrigger value="payments" className="flex-1">Payments</TabsTrigger>
-            <TabsTrigger value="attendance" className="flex-1">Attendance</TabsTrigger>
+          <TabsList className="w-full flex-wrap h-auto">
+            <TabsTrigger value="membership" className="flex-1 min-w-[100px]">Membership</TabsTrigger>
+            <TabsTrigger value="payments" className="flex-1 min-w-[100px]">Payments</TabsTrigger>
+            <TabsTrigger value="attendance" className="flex-1 min-w-[100px]">Attendance</TabsTrigger>
+            <TabsTrigger value="workouts" className="flex-1 min-w-[100px]">Workouts</TabsTrigger>
+            <TabsTrigger value="diet" className="flex-1 min-w-[100px]">Diet</TabsTrigger>
           </TabsList>
 
           <TabsContent value="membership">
@@ -267,6 +340,82 @@ export default function MemberProfile() {
                   <p className="text-sm text-muted-foreground">No attendance records</p>
                 </CardContent>
               </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="workouts">
+            <Card className="mb-4">
+              <CardContent className="p-4 flex gap-2">
+                <select
+                  className="flex-1 bg-card border border-border rounded-md px-3 py-2 text-sm text-foreground"
+                  value={selectedWorkoutPlan}
+                  onChange={(e) => setSelectedWorkoutPlan(e.target.value)}
+                >
+                  <option value="">Select a workout plan to assign...</option>
+                  {allWorkoutPlans?.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                </select>
+                <Button 
+                  onClick={() => assignWorkoutMutation.mutate(selectedWorkoutPlan)} 
+                  disabled={!selectedWorkoutPlan || assignWorkoutMutation.isPending}
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Assign
+                </Button>
+              </CardContent>
+            </Card>
+            {memberWorkouts && memberWorkouts.length > 0 ? (
+              <div className="space-y-2">
+                {memberWorkouts.map((w: any) => (
+                  <Card key={w.id}>
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{w.workout_plans?.name || "Unknown Plan"}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Assigned: {format(new Date(w.created_at), "MMM d, yyyy")}</p>
+                      </div>
+                      <StatusBadge status={w.status as "active" | "inactive"} />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card><CardContent className="p-6 text-center"><Dumbbell className="h-8 w-8 text-muted-foreground mx-auto mb-2" /><p className="text-sm text-muted-foreground">No workout plans assigned</p></CardContent></Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="diet">
+            <Card className="mb-4">
+              <CardContent className="p-4 flex gap-2">
+                <select
+                  className="flex-1 bg-card border border-border rounded-md px-3 py-2 text-sm text-foreground"
+                  value={selectedDietPlan}
+                  onChange={(e) => setSelectedDietPlan(e.target.value)}
+                >
+                  <option value="">Select a diet plan to assign...</option>
+                  {allDietPlans?.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                </select>
+                <Button 
+                  onClick={() => assignDietMutation.mutate(selectedDietPlan)} 
+                  disabled={!selectedDietPlan || assignDietMutation.isPending}
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Assign
+                </Button>
+              </CardContent>
+            </Card>
+            {memberDietPlans && memberDietPlans.length > 0 ? (
+              <div className="space-y-2">
+                {memberDietPlans.map((d: any) => (
+                  <Card key={d.id}>
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{d.diet_plans?.name || "Unknown Plan"}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Assigned: {format(new Date(d.created_at), "MMM d, yyyy")}</p>
+                      </div>
+                      <StatusBadge status={d.status as "active" | "inactive"} />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card><CardContent className="p-6 text-center"><Salad className="h-8 w-8 text-muted-foreground mx-auto mb-2" /><p className="text-sm text-muted-foreground">No diet plans assigned</p></CardContent></Card>
             )}
           </TabsContent>
         </Tabs>

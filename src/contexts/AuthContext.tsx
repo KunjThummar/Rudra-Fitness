@@ -35,6 +35,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (profileData) setProfile(profileData);
     } catch {
       setRole("member");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,8 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setRole(null);
         setProfile(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -57,8 +59,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchUserData(session.user.id);
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();

@@ -50,7 +50,7 @@ export default function MemberForm() {
       if (!id) return null;
       const { data } = await supabase
         .from("profiles")
-        .select("id, full_name, phone")
+        .select("*")
         .eq("id", id)
         .single();
       return data;

@@ -2,43 +2,56 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layouts/AppLayout";
 import { OfflineBanner, InstallPrompt } from "@/components/PWAComponents";
-import Login from "@/pages/Login";
-import ForgotPassword from "@/pages/ForgotPassword";
-import SignUp from "@/pages/SignUp";
-import ResetPassword from "@/pages/ResetPassword";
-import AdminDashboard from "@/pages/admin/Dashboard";
-import MembersPage from "@/pages/admin/Members";
-import MemberForm from "@/pages/admin/MemberForm";
-import MemberProfile from "@/pages/admin/MemberProfile";
-import PaymentsPage from "@/pages/admin/Payments";
-import MembershipPlansPage from "@/pages/admin/MembershipPlans";
-import WorkoutsPage from "@/pages/admin/Workouts";
-import DietPlansPage from "@/pages/admin/DietPlans";
-import TrainersPage from "@/pages/admin/Trainers";
-import ReportsPage from "@/pages/admin/Reports";
-import AttendancePage from "@/pages/admin/Attendance";
-import NotificationsAdminPage from "@/pages/admin/Notifications";
-import AdminMorePage from "@/pages/admin/More";
-import MemberDashboard from "@/pages/member/Dashboard";
-import MemberWorkoutsPage from "@/pages/member/Workouts";
-import MemberDietPage from "@/pages/member/Diet";
-import MemberProgressPage from "@/pages/member/Progress";
-import MemberAttendancePage from "@/pages/member/Attendance";
-import MemberNotificationsPage from "@/pages/member/Notifications";
-import MemberAchievementsPage from "@/pages/member/Achievements";
-import MemberProfilePage from "@/pages/member/Profile";
-import MemberMorePage from "@/pages/member/More";
-import SettingsPage from "@/pages/Settings";
-import HelpPage from "@/pages/Help";
-import PlaceholderPage from "@/pages/PlaceholderPage";
-import Unauthorized from "@/pages/Unauthorized";
-import NotFound from "@/pages/NotFound";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
-const queryClient = new QueryClient();
+// Lazy-loaded pages for code splitting and Performance Optimization
+const Login = lazy(() => import("@/pages/Login"));
+const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
+const SignUp = lazy(() => import("@/pages/SignUp"));
+const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const MembersPage = lazy(() => import("@/pages/admin/Members"));
+const MemberForm = lazy(() => import("@/pages/admin/MemberForm"));
+const MemberProfile = lazy(() => import("@/pages/admin/MemberProfile"));
+const PaymentsPage = lazy(() => import("@/pages/admin/Payments"));
+const MembershipPlansPage = lazy(() => import("@/pages/admin/MembershipPlans"));
+const WorkoutsPage = lazy(() => import("@/pages/admin/Workouts"));
+const DietPlansPage = lazy(() => import("@/pages/admin/DietPlans"));
+const TrainersPage = lazy(() => import("@/pages/admin/Trainers"));
+const ReportsPage = lazy(() => import("@/pages/admin/Reports"));
+const AttendancePage = lazy(() => import("@/pages/admin/Attendance"));
+const NotificationsAdminPage = lazy(() => import("@/pages/admin/Notifications"));
+const AdminMorePage = lazy(() => import("@/pages/admin/More"));
+const MemberDashboard = lazy(() => import("@/pages/member/Dashboard"));
+const MemberWorkoutsPage = lazy(() => import("@/pages/member/Workouts"));
+const MemberDietPage = lazy(() => import("@/pages/member/Diet"));
+const MemberProgressPage = lazy(() => import("@/pages/member/Progress"));
+const MemberAttendancePage = lazy(() => import("@/pages/member/Attendance"));
+const MemberNotificationsPage = lazy(() => import("@/pages/member/Notifications"));
+const MemberAchievementsPage = lazy(() => import("@/pages/member/Achievements"));
+const MemberProfilePage = lazy(() => import("@/pages/member/Profile"));
+const MemberMorePage = lazy(() => import("@/pages/member/More"));
+const SettingsPage = lazy(() => import("@/pages/Settings"));
+const HelpPage = lazy(() => import("@/pages/Help"));
+const PlaceholderPage = lazy(() => import("@/pages/PlaceholderPage"));
+const Unauthorized = lazy(() => import("@/pages/Unauthorized"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, 
+      gcTime: 10 * 60 * 1000,   
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -49,8 +62,9 @@ const App = () => (
         <AuthProvider>
           <OfflineBanner />
           <InstallPrompt />
-          <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+          <Suspense fallback={<div className="h-screen w-full flex items-center justify-center"><LoadingSpinner text="Loading..." /></div>}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -93,8 +107,9 @@ const App = () => (
               <Route path="/member/help" element={<HelpPage />} />
             </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
