@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layouts/AppLayout";
 import { OfflineBanner, InstallPrompt } from "@/components/PWAComponents";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 // Lazy-loaded pages for code splitting and Performance Optimization
 const Login = lazy(() => import("@/pages/Login"));
@@ -58,7 +59,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <ThemeProvider attribute="class" defaultTheme="dark" storageKey="vite-ui-theme">
+        <BrowserRouter>
         <AuthProvider>
           <OfflineBanner />
           <InstallPrompt />
@@ -112,6 +114,7 @@ const App = () => (
           </Suspense>
         </AuthProvider>
       </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "next-themes";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -11,6 +12,7 @@ import {
 
 export default function SettingsPage() {
   const { signOut, profile, role } = useAuth();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -56,7 +58,10 @@ export default function SettingsPage() {
                 <Moon className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm">Dark Mode</span>
               </div>
-              <Switch />
+              <Switch 
+                checked={theme === "dark"} 
+                onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} 
+              />
             </div>
             <Separator />
             <div className="flex items-center justify-between p-4">
