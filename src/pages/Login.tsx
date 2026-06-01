@@ -29,6 +29,8 @@ export default function Login() {
   const { toast } = useToast();
   const { signIn, role } = useAuth();
 
+
+  //handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
