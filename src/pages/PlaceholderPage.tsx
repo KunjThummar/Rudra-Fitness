@@ -6,6 +6,7 @@ interface PlaceholderPageProps {
   title: string;
 }
 
+//placeholder
 export default function PlaceholderPage({ title }: PlaceholderPageProps) {
   return (
     <div>
